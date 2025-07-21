@@ -66,13 +66,10 @@ pipeline () {
     --script-executable=/usr/bin/python3
   autoninja -C "out/${TARGET_PLATFORM}_${CONFIG}" ${TARGET}  # TARGET may expand to multiple args
 
-  if [[ "${TARGET_PLATFORM}" =~ "linux-x64x11" ]]; then
-    # Build the linux-x64x11-no-starboard configuration for chromedriver.
-    LINUX_NO_SB_PLATFORM="linux-x64x11-no-starboard"
-    cobalt/build/gn.py -p "${LINUX_NO_SB_PLATFORM}" -C "${CONFIG}" \
-      --script-executable=/usr/bin/python3
-    autoninja -C "out/${LINUX_NO_SB_PLATFORM}_${CONFIG}" "chromedriver"
-  fi
+  # If the target platform is linux-x64x11 and is for release, then also build
+  # chromedriver target with the linux-x64x11-no-starboard platform in the same
+  # config.
+  build_chromedriver_for_linux_release
 
   # Build bootloader config if set.
   if [ -n "${BOOTLOADER:-}" ]; then

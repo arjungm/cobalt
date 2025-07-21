@@ -172,6 +172,27 @@ ninja_build () {
   fi
 }
 
+build_chromedriver_for_linux_release () {
+  # IMPORTANT: chromedriver must be built without starboardizations. We ensure
+  # that the binary is built with the linux-x64x11-no-starboard config in a
+  # previous build step. Then copy the file into this out directory to
+  # simulate having built it in-situ (even though it's not usually possible).
+  # This simplifies the execution of the packaging scripts.
+
+  if is_release_build && is_release_config && [[ "${TARGET_PLATFORM}" =~ "linux-x64x11" ]]; then
+    local linux_no_sb="linux-x64x11-no-starboard"
+    cobalt/build/gn.py -p "${linux_no_sb}" -C "${CONFIG}" \
+      --script-executable=/usr/bin/python3
+    autoninja -C "out/${linux_no_sb}_${CONFIG}" "chromedriver"
+
+    local no_sb_out="${WORKSPACE_COBALT}/out/${linux_no_sb}_${CONFIG}"
+    local target_out="${WORKSPACE_COBALT}/out/${TARGET_PLATFORM}_${CONFIG}"
+    cp "${no_sb_out}/chromedriver" "${target_out}/chromedriver"
+  else
+    echo "Skipping chromedriver build."
+  fi
+}
+
 run_package_release_pipeline () {
   # NOTE: For DinD builds, we only run the GN and Ninja steps in the container.
   # Artifacts and build-products from these steps are used in subsequent steps
