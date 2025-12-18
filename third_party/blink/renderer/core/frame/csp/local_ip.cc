@@ -19,7 +19,7 @@ std::string SanitizeIPAddressStr(const std::string& ip_str) {
   std::string clean_ip = ip_str;
   size_t start = clean_ip.find('[');
   size_t end = clean_ip.find(']');
-  if (start != std::string::npos && end != std::string::npos) {
+  if (start != std::string::npos && end != std::string::npos && end > start) {
       clean_ip = clean_ip.substr(start + 1, end - start - 1);
   }
   return clean_ip;

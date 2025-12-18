@@ -1509,7 +1509,7 @@ TEST(ContentSecurityPolicy, ParseSerializedSourceList) {
       },
 #if BUILDFLAG(IS_COBALT)
       {
-          "'wrong' 'cobalt_insecure_local_network'",
+          "'wrong' 'cobalt-insecure-local-network'",
           base::BindOnce([] {
             auto csp = mojom::CSPSourceList::New();
             csp->cobalt_insecure_local_network = true;
@@ -1520,7 +1520,7 @@ TEST(ContentSecurityPolicy, ParseSerializedSourceList) {
           "ignored.",
       },
       {
-          "'wrong' 'cobalt_insecure_private_range'",
+          "'wrong' 'cobalt-insecure-private-range'",
           base::BindOnce([] {
             auto csp = mojom::CSPSourceList::New();
             csp->cobalt_insecure_private_range = true;
